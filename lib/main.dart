@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Home Page'),
+      home: MyHomePage(title: 'Accueil Recherche '),
     );
   }
 }
@@ -25,12 +25,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController localisationController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Colors.amberAccent[700],
       ),
       body:
       Column(
@@ -43,14 +46,15 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(width: 35.0),
               new Flexible(
                 child: new TextField(
+                  controller: localisationController,
                   decoration: InputDecoration(
-                    hintText: 'Entrez une Localisation ',
+                    hintText: 'Entrez une Localisation',
                   ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 10.0,),
+          SizedBox(height: 20.0,),
           Row(
             children: <Widget>[
               Text(
@@ -59,6 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(width: 5.0),
               new Flexible(
                 child: new TextField(
+                  controller: searchController,
                   decoration: InputDecoration(
                     hintText: 'Bars, Restaurants... ',
                   ),
@@ -72,8 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text('Resultats'),
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()),
-                  );
+                  _sendLocalisationToResult(context);
                 },
               )
             ],
@@ -82,24 +86,89 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+  void _sendLocalisationToResult(BuildContext context) {
+    String loc = localisationController.text;
+    String sch = searchController.text;
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Results(localisation: loc,search: sch),
+        ));
+  }
 }
 
 
-class SecondRoute extends StatelessWidget {
+class Results extends StatelessWidget {
+  final String localisation;
+  final String search;
+
+  Results({Key key, @required this.localisation,this.search}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Second Route"),
+        title: Text("Resultats"),
+        backgroundColor: Colors.amberAccent[700],
       ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
+      body: Column(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                      "Localisation : ",
+                      style: titleWeight(20.0),
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                      this.localisation,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20.0
+                    ),
+                  )
+                ],
+              ),
+              SizedBox(height: 30.0),
+              Row(
+                children: <Widget>[
+                  Text(
+                      "Recherche : ",
+                    style: titleWeight(20.0) ,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text(
+                      this.search,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 20.0
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 38.0),
+          Center(
+            child:
+            RaisedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text('Retour '),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  TextStyle titleWeight(double size){
+    return new TextStyle(
+      fontSize: size,
+      fontWeight: FontWeight.w200,
     );
   }
 }
