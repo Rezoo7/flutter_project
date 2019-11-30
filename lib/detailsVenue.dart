@@ -63,7 +63,7 @@ class Screen extends State<Details> {
         style: TextStyle(
             color: Colors.black,
         ),),
-        backgroundColor: Colors.amberAccent,
+        backgroundColor: Colors.amberAccent[700],
       ),
       body: Center(
 
