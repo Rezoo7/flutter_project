@@ -16,7 +16,7 @@ class detailsVenue extends StatelessWidget{
     return MaterialApp(
       title: 'Details venue',
       theme: ThemeData( // Add the 3 lines from here...
-        primaryColor: Colors.amberAccent,
+        primaryColor: Colors.amberAccent[700],
       ),
       home: Scaffold(
         body: Details(this.item),
