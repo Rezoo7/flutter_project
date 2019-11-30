@@ -33,7 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController locationController = TextEditingController();
   TextEditingController activityController = TextEditingController();
 
-  Future<Activities> activities;
+  Activities activities;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Text('Resultats'),
                 onPressed: () {
                   //_sendLocalisationToResult(context);
-                  activities = fetchActivities(); // (Je sais pas si ya ce qu'il faut dans activities)
+                  displayActivities();
+                  //activities = fetchActivities(); // (Je sais pas si ya ce qu'il faut dans activities)
                   // TODO display all activity results from activities in a list view (with icon and name)
                 },
               ),
@@ -125,8 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }*/
 
+  void displayActivities() async {
+    activities = await fetchActivities();
+    makeToast(activities.response.geocode.where.toString());
+  }
+
   Future<Activities> fetchActivities() async {
     final response = await http.get('https://api.foursquare.com/v2/venues/explore?client_id=$CLIENT_ID&client_secret=$CLIENT_SECRET&v=20180323&limit=5&near=${locationController.text}&query=${activityController.text}');
+    // https://api.foursquare.com/v2/venues/explore?client_id=AL5T4ZCA55WCJI53STZR1GFHAV24LF4VN52Z25XXUENQLUX1&client_secret=5KQK55CF0CFOTC3YWJY1301RAZIZNNIBXONCZHQU0WJGZ0X4&v=20180323&limit=5&near=Nantes&query=$foot
 
     if (response.statusCode == 200) {
       return activitiesFromJson(response.body);
